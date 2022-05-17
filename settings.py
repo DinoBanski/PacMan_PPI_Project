@@ -1,3 +1,4 @@
+import pygame
 
 # screen settings
 WIDTH, HEIGHT = 610, 670
@@ -22,4 +23,6 @@ FOOTER_TEXT_SIZE = 15
 TITLE_TEXT_SIZE = 100
 
 # player settings
+
+# enemy settings
 

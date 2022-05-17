@@ -1,5 +1,6 @@
 import sys
 from player_class import *
+from enemy_class import *
 
 pygame.init()
 vec = pygame.math.Vector2
@@ -16,11 +17,15 @@ class Game:
         pygame.display.set_caption('PACMAN')
         self.walls = []
         self.coins = []
+        self.enemies = []
+        self.enemy_pos = []
         self.player_pos = None
 
         self.load_background()
 
         self.player = Player(self, self.player_pos)
+
+        self.make_enemies()
 
 # run loop
 
@@ -65,7 +70,12 @@ class Game:
                         self.coins.append(vec(xidx, yidx))
                     elif char == "P":
                         self.player_pos = vec(xidx, yidx)
+                    elif char in ["2", "3", "4", "5"]:
+                        self.enemy_pos.append(vec(xidx, yidx))
 
+    def make_enemies(self):
+        for idx, pos in enumerate(self.enemy_pos):
+            self.enemies.append(Enemy(self, vec(pos), idx))
 
     def draw_grid(self):
         for x in range(WIDTH // self.cell_width):
@@ -121,6 +131,8 @@ class Game:
 
     def playing_update(self):
         self.player.update()
+        for enemy in self.enemies:
+            enemy.update()
 
     def playing_draw(self):
         self.screen.fill(BLACK)
@@ -131,6 +143,8 @@ class Game:
                        centered=False)
         self.draw_text('HIGH SCORE: ', self.screen, [WIDTH// 2 + 60, 0], START_TEXT_SIZE, WHITE, TEXT_FONT, centered=False)
         self.player.draw()
+        for enemy in self.enemies:
+            enemy.draw()
         pygame.display.update()
         #self.coins.pop()
 
