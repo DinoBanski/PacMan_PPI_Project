@@ -1,4 +1,3 @@
-import pygame
 from pygame.math import Vector2 as vec
 from settings import *
 
@@ -6,6 +5,7 @@ from settings import *
 class Player:
     def __init__(self, app, pos):
         self.app = app
+        self.starting_pos = [pos.x, pos.y]
         self.grid_pos = pos
         self.pix_pos = self.get_pix_pos()
         self.direction = vec(1, 0)
