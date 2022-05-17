@@ -146,7 +146,6 @@ class Game:
         for enemy in self.enemies:
             enemy.draw()
         pygame.display.update()
-        #self.coins.pop()
 
     def draw_coins(self):
         for coin in self.coins:
