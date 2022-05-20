@@ -14,6 +14,7 @@ class Player:
         self.able_to_move = True
         self.current_score = 0
         self.speed = 2
+        self.lives = 3
 
     def update(self):
         if self.able_to_move:
@@ -32,6 +33,9 @@ class Player:
         pygame.draw.circle(self.app.screen, YELLOW,
                            (int(self.pix_pos.x), int(self.pix_pos.y)),
                            self.app.cell_width//2-1)
+
+        for x in range(self.lives):
+            pygame.draw.circle(self.app.screen, YELLOW, (30 + 20*x, HEIGHT - 15), 7)
 
     def move(self, direction):
         self.stored_direction = direction

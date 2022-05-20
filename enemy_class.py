@@ -70,11 +70,11 @@ class Enemy:
     def move(self):
         if self.personality == "random":
             self.direction = self.get_random_dir()
-        elif self.personality == "random":
+        elif self.personality == "slow":
             self.direction = self.get_path_dir(self.target)
-        elif self.personality == "random":
+        elif self.personality == "speedy":
             self.direction = self.get_path_dir(self.target)
-        elif self.personality == "random":
+        elif self.personality == "scared":
             self.direction = self.get_path_dir(self.target)
 
     def get_path_dir(self, target):
@@ -106,11 +106,12 @@ class Enemy:
                 neighbours = [[0, -1], [1, 0], [0, 1], [-1, 0]]
                 for neighbour in neighbours:
                     if neighbour[0] + current[0] >= 0 and neighbour[0] + current[0] < len(grid[0]):
-                        next_cell = [neighbour[0] + current[0], neighbour[1] + current[1]]
-                        if next_cell not in visited:
-                            if grid[next_cell[1]][next_cell[0]] != 1:
-                                queue.append(next_cell)
-                                path.append({"Current": current, "Next": next_cell})
+                        if neighbour[1] + current[1] >= 0 and neighbour[1] + current[1] < len(grid):
+                            next_cell = [neighbour[0] + current[0], neighbour[1] + current[1]]
+                            if next_cell not in visited:
+                                if grid[next_cell[1]][next_cell[0]] != 1:
+                                    queue.append(next_cell)
+                                    path.append({"Current": current, "Next": next_cell})
         shortest = [target]
         while target != start:
             for step in path:
