@@ -21,8 +21,7 @@ class Game:
         self.enemies = []
         self.enemy_pos = []
         self.player_pos = None
-        self.boosters = []
-        with open('score.txt') as file:
+        with open('score.txt', "r") as file:
             self.previous_score = file.readline()
             file.close()
 
@@ -85,8 +84,6 @@ class Game:
                         self.player_pos = vec(xidx, yidx)
                     elif char in ["2", "3", "4", "5"]:
                         self.enemy_pos.append(vec(xidx, yidx))
-                    elif char == "B":
-                        self.boosters.append(vec(xidx, yidx))
 
     def make_enemies(self):
         for idx, pos in enumerate(self.enemy_pos):
@@ -184,7 +181,6 @@ class Game:
         self.screen.fill(BLACK)
         self.screen.blit(self.background, (TOP_BOTTOM_BUFFER//2, TOP_BOTTOM_BUFFER//2))
         self.draw_coins()
-        self.draw_boosters()
         self.draw_text('CURRENT SCORE: {}'.format(self.player.current_score), self.screen, [60, 0], START_TEXT_SIZE, WHITE, TEXT_FONT,
                        centered=False)
         self.draw_text('PREVIOUS SCORE: {}'.format(self.previous_score), self.screen, [WIDTH // 2 + 60, 0], 18, WHITE, TEXT_FONT, centered=False)
@@ -211,12 +207,6 @@ class Game:
             pygame.draw.circle(self.screen, WHITE,
                                (int(coin.x*self.cell_width)+self.cell_width//2+TOP_BOTTOM_BUFFER//2,
                                 int(coin.y*self.cell_height)+self.cell_height//2+TOP_BOTTOM_BUFFER//2), 3)
-
-    def draw_boosters(self):
-        for booster in self.boosters:
-            pygame.draw.circle(self.screen, WHITE,
-                               (int(booster.x*self.cell_width)+self.cell_width//2+TOP_BOTTOM_BUFFER//2,
-                                int(booster.y*self.cell_height)+self.cell_height//2+TOP_BOTTOM_BUFFER//2), 5)
 
 # game over functions
 
