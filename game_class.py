@@ -21,6 +21,10 @@ class Game:
         self.enemies = []
         self.enemy_pos = []
         self.player_pos = None
+        self.boosters = []
+        with open('score.txt') as file:
+            self.previous_score = file.readline()
+            file.close()
 
         self.load_background()
 
@@ -81,10 +85,12 @@ class Game:
                         self.player_pos = vec(xidx, yidx)
                     elif char in ["2", "3", "4", "5"]:
                         self.enemy_pos.append(vec(xidx, yidx))
+                    elif char == "B":
+                        self.boosters.append(vec(xidx, yidx))
 
     def make_enemies(self):
         for idx, pos in enumerate(self.enemy_pos):
-            self.enemies.append(Enemy(self, vec(pos), idx))
+            self.enemies.append(Enemy(self, vec(pos), idx, self.player))
 
     def draw_grid(self):
         for x in range(WIDTH // self.cell_width):
@@ -109,6 +115,11 @@ class Game:
                 for xidx, char in enumerate(line):
                     if char == 'C':
                         self.coins.append(vec(xidx, yidx))
+
+        with open('score.txt') as file:
+            self.previous_score = file.readline()
+            file.close()
+
         self.state = "playing"
 
 # start functions
@@ -127,7 +138,7 @@ class Game:
 
     def start_draw(self):
         self.screen.fill(BLACK)
-        self.draw_text('HIGH SCORE: ', self.screen, [60, 0], START_TEXT_SIZE,
+        self.draw_text('PREVIOUS SCORE: {}'.format(self.previous_score), self.screen, [60, 0], START_TEXT_SIZE,
                        WHITE, TEXT_FONT, centered=False)
         self.draw_text('THE PACMAN', self.screen, [WIDTH // 2, 150], TITLE_TEXT_SIZE,
                        RED, TEXT_FONT, centered=True)
@@ -168,12 +179,15 @@ class Game:
             self.state = 'victory'
 
 
+
     def playing_draw(self):
         self.screen.fill(BLACK)
         self.screen.blit(self.background, (TOP_BOTTOM_BUFFER//2, TOP_BOTTOM_BUFFER//2))
         self.draw_coins()
+        self.draw_boosters()
         self.draw_text('CURRENT SCORE: {}'.format(self.player.current_score), self.screen, [60, 0], START_TEXT_SIZE, WHITE, TEXT_FONT,
                        centered=False)
+        self.draw_text('PREVIOUS SCORE: {}'.format(self.previous_score), self.screen, [WIDTH // 2 + 60, 0], 18, WHITE, TEXT_FONT, centered=False)
         self.player.draw()
         for enemy in self.enemies:
             enemy.draw()
@@ -198,6 +212,12 @@ class Game:
                                (int(coin.x*self.cell_width)+self.cell_width//2+TOP_BOTTOM_BUFFER//2,
                                 int(coin.y*self.cell_height)+self.cell_height//2+TOP_BOTTOM_BUFFER//2), 3)
 
+    def draw_boosters(self):
+        for booster in self.boosters:
+            pygame.draw.circle(self.screen, WHITE,
+                               (int(booster.x*self.cell_width)+self.cell_width//2+TOP_BOTTOM_BUFFER//2,
+                                int(booster.y*self.cell_height)+self.cell_height//2+TOP_BOTTOM_BUFFER//2), 5)
+
 # game over functions
 
     def game_over_events(self):
@@ -210,7 +230,9 @@ class Game:
                 self.running = False
 
     def game_over_update(self):
-        pass
+        with open('score.txt', "w") as file:
+            file.write(str(self.player.current_score))
+            file.close()
 
     def game_over_draw(self):
         self.screen.fill(BLACK)
@@ -235,7 +257,9 @@ class Game:
                 self.running = False
 
     def victory_update(self):
-        pass
+        with open('score.txt', "w") as file:
+            file.write(str(self.player.current_score))
+            file.close()
 
     def victory_draw(self):
         self.screen.fill(BLACK)

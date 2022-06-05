@@ -1,14 +1,16 @@
 import random
 
+from player_class import *
 from settings import *
 
 vec = pygame.math.Vector2
 
 
 class Enemy:
-    def __init__(self, app, pos, number):
+    def __init__(self, app, pos, number, player):
         self.app = app
         self.grid_pos = pos
+        self.player = player
         self.starting_pos = [pos.x, pos.y]
         self.pix_pos = self.get_pix_pos()
         self.radius = int(self.app.cell_width // 2.3)
@@ -29,14 +31,44 @@ class Enemy:
         self.grid_pos[1] = (self.pix_pos[1] - TOP_BOTTOM_BUFFER + self.app.cell_height // 2) // self.app.cell_height + 1
 
     def draw(self):
-        if self.number == 0:
-            pygame.draw.circle(self.app.screen, RED, (int(self.pix_pos.x), int(self.pix_pos.y)), 10)
-        elif self.number == 1:
-            pygame.draw.circle(self.app.screen, CYAN, (int(self.pix_pos.x), int(self.pix_pos.y)), 10)
-        elif self.number == 2:
-            pygame.draw.circle(self.app.screen, PURPLE, (int(self.pix_pos.x), int(self.pix_pos.y)), 10)
-        elif self.number == 3:
-            pygame.draw.circle(self.app.screen, GREEN, (int(self.pix_pos.x), int(self.pix_pos.y)), 10)
+        if self.player.player_state == 'normal':
+            if self.number == 0:
+                pygame.draw.circle(self.app.screen, RED, (int(self.pix_pos.x), int(self.pix_pos.y)), 10)
+            elif self.number == 1:
+                pygame.draw.circle(self.app.screen, CYAN, (int(self.pix_pos.x), int(self.pix_pos.y)), 10)
+            elif self.number == 2:
+                pygame.draw.circle(self.app.screen, PURPLE, (int(self.pix_pos.x), int(self.pix_pos.y)), 10)
+            elif self.number == 3:
+                pygame.draw.circle(self.app.screen, GREEN, (int(self.pix_pos.x), int(self.pix_pos.y)), 10)
+        else:
+            if self.number == 0:
+                pygame.draw.circle(self.app.screen, BLUE, (int(self.pix_pos.x), int(self.pix_pos.y)), 10)
+            elif self.number == 1:
+                pygame.draw.circle(self.app.screen, BLUE, (int(self.pix_pos.x), int(self.pix_pos.y)), 10)
+            elif self.number == 2:
+                pygame.draw.circle(self.app.screen, BLUE, (int(self.pix_pos.x), int(self.pix_pos.y)), 10)
+            elif self.number == 3:
+                pygame.draw.circle(self.app.screen, BLUE, (int(self.pix_pos.x), int(self.pix_pos.y)), 10)
+
+    def set_personality(self):
+        if self.player.player_state == "normal":
+            if self.number == 0:
+                return "speedy"
+            elif self.number == 1:
+                return "slow"
+            elif self.number == 2:
+                return "random"
+            else:
+                return "scared"
+        else:
+            if self.number == 0:
+                return "scared"
+            elif self.number == 1:
+                return "scared"
+            elif self.number == 2:
+                return "scared"
+            else:
+                return "scared"
 
     def set_speed(self):
         if self.personality in ["speedy", "scared"]:
@@ -140,12 +172,3 @@ class Enemy:
         return vec((self.grid_pos.x * self.app.cell_width) + TOP_BOTTOM_BUFFER // 2 + self.app.cell_width // 2,
                    (self.grid_pos.y * self.app.cell_height) + TOP_BOTTOM_BUFFER // 2 + self.app.cell_height // 2)
 
-    def set_personality(self):
-        if self.number == 0:
-            return "speedy"
-        elif self.number == 1:
-            return "slow"
-        elif self.number == 2:
-            return "random"
-        else:
-            return "scared"

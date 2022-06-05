@@ -18,6 +18,7 @@ GREEN = (65, 232, 12)
 YELLOW = (255, 198, 0)
 RED = (245, 61, 2)
 PURPLE = (218, 13, 255)
+BLUE = (0, 0, 255)
 
 # font settings
 TEXT_FONT = 'VT323-Regular.ttf'
