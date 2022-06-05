@@ -21,7 +21,6 @@ class Game:
         self.enemies = []
         self.enemy_pos = []
         self.player_pos = None
-        self.portals = []
 
         self.load_background()
 
@@ -45,6 +44,10 @@ class Game:
                 self.game_over_events()
                 self.game_over_update()
                 self.game_over_draw()
+            elif self.state == 'victory':
+                self.victory_events()
+                self.victory_update()
+                self.victory_draw()
             else:
                 self.running = False
             self.clock.tick(FPS)
@@ -78,8 +81,6 @@ class Game:
                         self.player_pos = vec(xidx, yidx)
                     elif char in ["2", "3", "4", "5"]:
                         self.enemy_pos.append(vec(xidx, yidx))
-                    elif char == 'T':
-                        self.portals.append(vec(xidx, yidx))
 
     def make_enemies(self):
         for idx, pos in enumerate(self.enemy_pos):
@@ -163,6 +164,10 @@ class Game:
             if enemy.grid_pos == self.player.grid_pos:
                 self.remove_life()
 
+        if self.coins == []:
+            self.state = 'victory'
+
+
     def playing_draw(self):
         self.screen.fill(BLACK)
         self.screen.blit(self.background, (TOP_BOTTOM_BUFFER//2, TOP_BOTTOM_BUFFER//2))
@@ -218,3 +223,27 @@ class Game:
             WIDTH // 2, HEIGHT // 1.5], 36, (190, 190, 190), TEXT_FONT, centered=True)
         pygame.display.update()
 
+# victory functions
+
+    def victory_events(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.running = False
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                self.reset()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                self.running = False
+
+    def victory_update(self):
+        pass
+
+    def victory_draw(self):
+        self.screen.fill(BLACK)
+        quit_text = "Press the escape button to QUIT"
+        again_text = "Press SPACE bar to PLAY AGAIN"
+        self.draw_text("VICTORY", self.screen, [WIDTH // 2, 100], 52, RED, TEXT_FONT, centered=True)
+        self.draw_text(again_text, self.screen, [
+            WIDTH // 2, HEIGHT // 2], 36, (190, 190, 190), TEXT_FONT, centered=True)
+        self.draw_text(quit_text, self.screen, [
+            WIDTH // 2, HEIGHT // 1.5], 36, (190, 190, 190), TEXT_FONT, centered=True)
+        pygame.display.update()
