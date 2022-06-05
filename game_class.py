@@ -21,6 +21,7 @@ class Game:
         self.enemies = []
         self.enemy_pos = []
         self.player_pos = None
+        self.portals = []
 
         self.load_background()
 
@@ -77,6 +78,8 @@ class Game:
                         self.player_pos = vec(xidx, yidx)
                     elif char in ["2", "3", "4", "5"]:
                         self.enemy_pos.append(vec(xidx, yidx))
+                    elif char == 'T':
+                        self.portals.append(vec(xidx, yidx))
 
     def make_enemies(self):
         for idx, pos in enumerate(self.enemy_pos):
@@ -93,7 +96,7 @@ class Game:
         self.player.current_score = 0
         self.player.grid_pos = vec(self.player.starting_pos)
         self.player.pix_pos = self.player.get_pix_pos()
-        self.player.direction *= 1
+        self.player.direction *= 0
         for enemy in self.enemies:
             enemy.grid_pos = vec(enemy.starting_pos)
             enemy.pix_pos = enemy.get_pix_pos()
@@ -143,7 +146,7 @@ class Game:
                 self.running = False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
-                    self.player.move(vec(-1,0))
+                    self.player.move(vec(-1, 0))
                 if event.key == pygame.K_RIGHT:
                     self.player.move(vec(1, 0))
                 if event.key == pygame.K_UP:
@@ -164,10 +167,8 @@ class Game:
         self.screen.fill(BLACK)
         self.screen.blit(self.background, (TOP_BOTTOM_BUFFER//2, TOP_BOTTOM_BUFFER//2))
         self.draw_coins()
-        # self.draw_grid()
         self.draw_text('CURRENT SCORE: {}'.format(self.player.current_score), self.screen, [60, 0], START_TEXT_SIZE, WHITE, TEXT_FONT,
                        centered=False)
-        self.draw_text('HIGH SCORE: ', self.screen, [WIDTH// 2 + 60, 0], START_TEXT_SIZE, WHITE, TEXT_FONT, centered=False)
         self.player.draw()
         for enemy in self.enemies:
             enemy.draw()
