@@ -1,5 +1,4 @@
 import sys
-from player_class import *
 from enemy_class import *
 from settings import *
 
@@ -21,9 +20,6 @@ class Game:
         self.enemies = []
         self.enemy_pos = []
         self.player_pos = None
-        with open('score.txt', "r") as file:
-            self.previous_score = file.readline()
-            file.close()
 
         self.load_background()
 
@@ -119,6 +115,25 @@ class Game:
 
         self.state = "playing"
 
+    def remove_life(self):
+        self.player.lives -= 1
+        if self.player.lives == 0:
+            self.state = "game over"
+        else:
+            self.player.grid_pos = vec(self.player.starting_pos)
+            self.player.pix_pos = self.player.get_pix_pos()
+            self.player.direction *= 0
+            for enemy in self.enemies:
+                enemy.grid_pos = vec(enemy.starting_pos)
+                enemy.pix_pos = enemy.get_pix_pos()
+                enemy.direction *= 0
+
+    def draw_coins(self):
+        for coin in self.coins:
+            pygame.draw.circle(self.screen, WHITE,
+                               (int(coin.x*self.cell_width)+self.cell_width//2+TOP_BOTTOM_BUFFER//2,
+                                int(coin.y*self.cell_height)+self.cell_height//2+TOP_BOTTOM_BUFFER//2), 3)
+
 # start functions
 
     def start_events(self):
@@ -131,7 +146,9 @@ class Game:
                 self.state = 'playing'
 
     def start_update(self):
-        pass
+        with open('score.txt', "r") as file:
+            self.previous_score = file.readline()
+            file.close()
 
     def start_draw(self):
         self.screen.fill(BLACK)
@@ -175,8 +192,6 @@ class Game:
         if self.coins == []:
             self.state = 'victory'
 
-
-
     def playing_draw(self):
         self.screen.fill(BLACK)
         self.screen.blit(self.background, (TOP_BOTTOM_BUFFER//2, TOP_BOTTOM_BUFFER//2))
@@ -188,25 +203,6 @@ class Game:
         for enemy in self.enemies:
             enemy.draw()
         pygame.display.update()
-
-    def remove_life(self):
-        self.player.lives -= 1
-        if self.player.lives == 0:
-            self.state = "game over"
-        else:
-            self.player.grid_pos = vec(self.player.starting_pos)
-            self.player.pix_pos = self.player.get_pix_pos()
-            self.player.direction *= 0
-            for enemy in self.enemies:
-                enemy.grid_pos = vec(enemy.starting_pos)
-                enemy.pix_pos = enemy.get_pix_pos()
-                enemy.direction *= 0
-
-    def draw_coins(self):
-        for coin in self.coins:
-            pygame.draw.circle(self.screen, WHITE,
-                               (int(coin.x*self.cell_width)+self.cell_width//2+TOP_BOTTOM_BUFFER//2,
-                                int(coin.y*self.cell_height)+self.cell_height//2+TOP_BOTTOM_BUFFER//2), 3)
 
 # game over functions
 
